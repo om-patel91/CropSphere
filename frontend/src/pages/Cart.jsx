@@ -2,12 +2,12 @@ import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
-  const { cartItems, removeFromCart } = useCart();
+  const { cartItems, increaseQuantity, decreaseQuantity } = useCart();
 
   const totalPrice = cartItems.reduce(
-    (total, item) => total + item.price,
-    0
-  );
+  (total, item) => total + Number(item.price) * item.quantity,
+  0
+);
 
   return (
     <div className="min-h-screen py-24 px-6 bg-light">
@@ -24,14 +24,13 @@ const Cart = () => {
             </p>
             <Link
               to="/products"
-              className="inline-block mt-6 bg-primary text-white px-6 py-3 rounded-xl hover:bg-secondary transition"
+              className="inline-block mt-6 bg-primary text-white px-6 py-3 rounded-xl"
             >
               Browse Products
             </Link>
           </div>
         ) : (
           <>
-            {/* Cart Items */}
             <div className="space-y-6">
               {cartItems.map((item) => (
                 <div
@@ -43,21 +42,33 @@ const Cart = () => {
                       {item.name}
                     </h2>
                     <p className="text-gray-600">
-                      ₹{item.price}
+                      ₹{item.price} × {item.quantity}
                     </p>
                   </div>
 
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="text-red-500 font-semibold hover:underline"
-                  >
-                    Remove
-                  </button>
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => decreaseQuantity(item.id)}
+                      className="px-3 py-1 bg-gray-200 rounded"
+                    >
+                      -
+                    </button>
+
+                    <span className="font-semibold">
+                      {item.quantity}
+                    </span>
+
+                    <button
+                      onClick={() => increaseQuantity(item.id)}
+                      className="px-3 py-1 bg-gray-200 rounded"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Total + Checkout */}
             <div className="mt-12 bg-white p-8 rounded-2xl shadow flex justify-between items-center">
               <h2 className="text-2xl font-bold">
                 Total: ₹{totalPrice}
@@ -65,7 +76,7 @@ const Cart = () => {
 
               <Link
                 to="/checkout"
-                className="bg-primary text-white px-8 py-4 rounded-xl hover:bg-secondary transition"
+                className="bg-primary text-white px-8 py-4 rounded-xl"
               >
                 Proceed to Checkout
               </Link>

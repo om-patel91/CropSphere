@@ -7,35 +7,61 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
-
     if (storedCart) {
-      try {
-        const parsed = JSON.parse(storedCart);
-        if (Array.isArray(parsed)) {
-          setCartItems(parsed);
-        } else {
-          setCartItems([]);
-        }
-      } catch (error) {
-        setCartItems([]);
+      const parsed = JSON.parse(storedCart);
+      if (Array.isArray(parsed)) {
+        setCartItems(parsed);
       }
     }
   }, []);
 
   const addToCart = (product) => {
-    const updatedCart = [...cartItems, product];
+    const existingItem = cartItems.find(item => item.id === product.id);
+
+    let updatedCart;
+
+    if (existingItem) {
+      updatedCart = cartItems.map(item =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    } else {
+      updatedCart = [...cartItems, { ...product, quantity: 1 }];
+    }
+
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  const removeFromCart = (id) => {
-    const updatedCart = cartItems.filter(item => item.id !== id);
+  const increaseQuantity = (id) => {
+    const updatedCart = cartItems.map(item =>
+      item.id === id
+        ? { ...item, quantity: item.quantity + 1 }
+        : item
+    );
+
+    setCartItems(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
+  const decreaseQuantity = (id) => {
+    const updatedCart = cartItems
+      .map(item =>
+        item.id === id
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+      .filter(item => item.quantity > 0);
+
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{ cartItems, addToCart, increaseQuantity, decreaseQuantity }}
+    >
       {children}
     </CartContext.Provider>
   );
