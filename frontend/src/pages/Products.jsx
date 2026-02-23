@@ -1,31 +1,5 @@
 import ProductCard from "../components/ProductCard";
-
-const products = [
-  {
-    id: 1,
-    name: "Hybrid Tomato Seeds",
-    brand: "AgroTech",
-    price: 299,
-    oldPrice: 350,
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 2,
-    name: "Organic Fertilizer",
-    brand: "GreenGrow",
-    price: 499,
-    oldPrice: 550,
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    name: "Advanced Pesticide Spray",
-    brand: "FarmCare",
-    price: 699,
-    oldPrice: 750,
-    image: "https://via.placeholder.com/200",
-  },
-];
+import products from "../data/products"
 
 const Products = () => {
   return (

@@ -9,6 +9,8 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
 import Products from "./pages/Products.jsx";
 import ProductDetails from "./pages/ProductDetail.jsx";
+import Checkout from "./pages/Checkout.jsx";
+import Orders from "./pages/Orders.jsx";
 
 function App() {
   return (
@@ -29,6 +31,16 @@ function App() {
     </AdminRoute>}/>
     <Route path="/products" element={<Products/>} />
     <Route path="/products/:id" element={<ProductDetails/>}/>
+    <Route path="/checkout" element={
+    <ProtectedRoute>
+      <Checkout />
+    </ProtectedRoute> }
+/>
+<Route path="/orders" element={
+    <ProtectedRoute>
+      <Orders />
+    </ProtectedRoute>}
+/>
     </Routes>
     
   );
