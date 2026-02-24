@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
         type:String,
         enum:["farmer","admin"],
         defalut: "farmer",
-    },
+    }, 
 },{timrstamps: true})
 
 // Hash password before saving
