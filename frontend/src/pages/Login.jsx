@@ -10,19 +10,15 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
- const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const userData = {
-    name: "Om",
-    email,
-    role: email === "admin@gmail.com" ? "admin" : "farmer",
-  };
-
-  console.log("Login clicked. UserData:", userData);
-
-  login(userData);
-  navigate("/");
+  try {
+    await login(email, password);
+    navigate("/");
+  } catch (error) {
+    alert("Invalid email or password");
+  }
 };
 
   return (

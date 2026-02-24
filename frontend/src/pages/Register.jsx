@@ -4,24 +4,23 @@ import { useAuth } from "../context/AuthContext";
 import loginImage from "../assets/login-farm.jpg";
 
 const Register = () => {
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleRegister = (e) => {
-    e.preventDefault();
+  const handleRegister =async (e) => {
+   e.preventDefault();
 
-    const userData = {
-      name,
-      email,
-      role: "farmer",
-    };
-
-    login(userData);
+  try {
+    await register(name, email, password);
     navigate("/");
+  }catch (error) {
+  console.log(error.response?.data);
+  alert(error.response?.data?.message || "Registration failed");
+}
   };
 
   return (
