@@ -1,7 +1,24 @@
 import ProductCard from "../components/ProductCard";
-import products from "../data/products"
+import { useEffect, useState } from "react";
+import API from "../api/axios";
 
 const Products = () => {
+  const [products, setProducts] = useState([]);
+
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const { data } = await API.get("/products");
+      console.log("Products from API:", data);
+      setProducts(data);
+    } catch (error) {
+      console.log("Product fetch error:", error.response?.data);
+    }
+  };
+
+  fetchProducts();
+}, []);
+
   return (
     <div className="min-h-screen bg-white py-24">
       <div className="max-w-7xl mx-auto px-6">

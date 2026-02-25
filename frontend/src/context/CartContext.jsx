@@ -1,72 +1,69 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import API from "../api/axios";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      const parsed = JSON.parse(storedCart);
-      if (Array.isArray(parsed)) {
-        setCartItems(parsed);
-      }
+  // 🔄 Load Cart from Backend
+  const fetchCart = async () => {
+    try {
+      const { data } = await API.get("/cart");
+      setCartItems(data.items || []);
+    } catch (error) {
+      console.log("Cart fetch error:", error.response?.data);
     }
+  };
+
+  // ➕ Add to Cart
+  const addToCart = async (product) => {
+    try {
+      const { data } = await API.post("/cart", {
+        productId: product._id,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+      });
+
+      setCartItems(data.items);
+    } catch (error) {
+      console.log("Add to cart error:", error.response?.data);
+    }
+  };
+
+  // ❌ Remove from Cart
+  const removeFromCart = async (itemId) => {
+    try {
+      const { data } = await API.delete(`/cart/${itemId}`);
+      setCartItems(data.items);
+    } catch (error) {
+      console.log("Remove error:", error.response?.data);
+    }
+  };
+
+  // 🔄 Load cart on mount
+  useEffect(() => {
+    fetchCart();
   }, []);
 
-  const addToCart = (product) => {
-    const existingItem = cartItems.find(item => item.id === product.id);
-
-    let updatedCart;
-
-    if (existingItem) {
-      updatedCart = cartItems.map(item =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-    } else {
-      updatedCart = [...cartItems, { ...product, quantity: 1 }];
+  const updateQuantity = async (itemId, quantity) => {
+    try {
+      const { data } = await API.put(`/cart/${itemId}`, { quantity });
+      setCartItems(data.items);
+    } catch (error) {
+      console.log("Update error:", error.response?.data);
     }
-
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
-
-  const increaseQuantity = (id) => {
-    const updatedCart = cartItems.map(item =>
-      item.id === id
-        ? { ...item, quantity: item.quantity + 1 }
-        : item
-    );
-
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  };
-
-  const decreaseQuantity = (id) => {
-    const updatedCart = cartItems
-      .map(item =>
-        item.id === id
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-      .filter(item => item.quantity > 0);
-
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  };
-
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, increaseQuantity, decreaseQuantity }}
+      value={{ cartItems, addToCart, removeFromCart, updateQuantity, fetchCart }}
     >
       {children}
     </CartContext.Provider>
   );
+  
 };
 
-export const useCart = () => {
-  return useContext(CartContext);
-};
+
+export const useCart = () => useContext(CartContext);

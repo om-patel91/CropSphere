@@ -2,7 +2,7 @@ import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
-  const { cartItems, increaseQuantity, decreaseQuantity } = useCart();
+  const { cartItems, updateQuantity } = useCart();
 
   const totalPrice = cartItems.reduce(
   (total, item) => total + Number(item.price) * item.quantity,
@@ -34,7 +34,7 @@ const Cart = () => {
             <div className="space-y-6">
               {cartItems.map((item) => (
                 <div
-                  key={item.id}
+                  key={item._id}
                   className="p-6 bg-white shadow rounded-2xl flex justify-between items-center"
                 >
                   <div>
@@ -48,7 +48,7 @@ const Cart = () => {
 
                   <div className="flex items-center gap-4">
                     <button
-                      onClick={() => decreaseQuantity(item.id)}
+                      onClick={() => updateQuantity(item._id, item.quantity - 1)}
                       className="px-3 py-1 bg-gray-200 rounded"
                     >
                       -
@@ -59,7 +59,7 @@ const Cart = () => {
                     </span>
 
                     <button
-                      onClick={() => increaseQuantity(item.id)}
+                      onClick={() => updateQuantity(item._id, item.quantity + 1)}
                       className="px-3 py-1 bg-gray-200 rounded"
                     >
                       +
