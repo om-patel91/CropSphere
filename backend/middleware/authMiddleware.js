@@ -8,10 +8,9 @@ export const protect = async (req, res, next) => {
     //check Authorization header
     if(req.headers.authorization && 
         req.headers.authorization.startsWith("Bearer")){
+          //Get token from hader
+          token = req.headers.authorization.split(" ")[1];
             try{
-                //Get token from hader
-                token = req.headers.authorization.split(" ")[1];
-
                 //verify token
                 const decoded = jwt.verify(token,process.env.JWT_SECRET);
 
