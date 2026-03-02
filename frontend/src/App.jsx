@@ -11,6 +11,7 @@ import Products from "./pages/Products.jsx";
 import ProductDetails from "./pages/ProductDetail.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Orders from "./pages/Orders.jsx";
+import OrderSuccess from "./pages/OrderSuccess.jsx";
 
 function App() {
   return (
@@ -41,6 +42,9 @@ function App() {
       <Orders />
     </ProtectedRoute>}
 />
+<Route path="/checkout" element={<Checkout/>}/>
+<Route path="/orders" element={<Orders/>}/>
+<Route path="/order-success" element={<OrderSuccess/>}/>
     </Routes>
     
   );

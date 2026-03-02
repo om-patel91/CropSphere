@@ -1,66 +1,144 @@
-import { useOrders } from "../context/OrderContext";
+import { useEffect, useState } from "react";
+import API from "../api/axios";
 
 const Orders = () => {
-  const { orders } = useOrders();
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const { data } = await API.get("/orders/myorders");
+        setOrders(data);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "processing":
+        return "bg-yellow-100 text-yellow-700";
+      case "shipped":
+        return "bg-blue-100 text-blue-700";
+      case "delivered":
+        return "bg-green-100 text-green-700";
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  if (orders.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h2 className="text-2xl font-semibold">No Orders Yet 📦</h2>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen py-24 px-6 bg-light">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-16">
+      <div className="max-w-5xl mx-auto px-6">
+        <h1 className="text-3xl font-bold mb-10">My Orders</h1>
 
-        <h1 className="text-4xl font-bold text-primary mb-10">
-          Your Orders
-        </h1>
+        <div className="space-y-8">
+          {orders.map((order) => (
+            <div
+              key={order._id}
+              className="bg-white p-8 rounded-xl shadow"
+            >
+              {/* Order Header */}
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <p className="text-sm text-gray-500">
+                    Order ID
+                  </p>
+                  <p className="font-semibold">
+                    {order._id}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
 
-        {orders.length === 0 ? (
-          <p>No orders yet.</p>
-        ) : (
-          orders.map((order) => {
-            const orderTotal = order.items.reduce(
-              (total, item) =>
-                total + item.price * item.quantity,
-              0
-            );
+                <span
+                  className={`px-4 py-2 rounded-full text-sm font-medium ${getStatusColor(
+                    order.orderStatus
+                  )}`}
+                >
+                  {order.orderStatus}
+                </span>
+              </div>
 
-            return (
-              <div
-                key={order.id}
-                className="mb-8 p-8 bg-white shadow rounded-2xl"
-              >
-                <p className="text-sm text-gray-500 mb-6">
-                  Order Date: {order.date}
-                </p>
-
-                <div className="space-y-4">
-                  {order.items.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex justify-between"
-                    >
+              {/* Ordered Items */}
+              <div className="space-y-4 mb-6">
+                {order.orderItems.map((item) => (
+                  <div
+                    key={item._id}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-16 h-16 object-contain rounded"
+                      />
                       <div>
-                        {item.name}
+                        <p className="font-medium">
+                          {item.name}
+                        </p>
                         <p className="text-sm text-gray-500">
                           ₹{item.price} × {item.quantity}
                         </p>
                       </div>
-
-                      <div className="font-semibold">
-                        ₹{item.price * item.quantity}
-                      </div>
                     </div>
-                  ))}
+
+                    <p className="font-semibold">
+                      ₹{item.price * item.quantity}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Order Footer */}
+              <div className="border-t pt-6 flex justify-between items-center">
+                <div>
+                  <p className="text-sm text-gray-500">
+                    Payment Method
+                  </p>
+                  <p className="font-medium">
+                    {order.paymentMethod}
+                  </p>
                 </div>
 
-                <hr className="my-6" />
-
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Total:</span>
-                  <span>₹{orderTotal}</span>
+                <div>
+                  <p className="text-sm text-gray-500">
+                    Total
+                  </p>
+                  <p className="text-xl font-bold text-primary">
+                    ₹{order.totalAmount}
+                  </p>
                 </div>
               </div>
-            );
-          })
-        )}
 
+              {/* Shipping Address */}
+              <div className="mt-6 text-sm text-gray-600">
+                <p className="font-medium mb-1">
+                  Shipping Address:
+                </p>
+                <p>
+                  {order.shippingAddress.fullName},{" "}
+                  {order.shippingAddress.address},{" "}
+                  {order.shippingAddress.city} -{" "}
+                  {order.shippingAddress.postalCode}
+                </p>
+                <p>Phone: {order.shippingAddress.phone}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

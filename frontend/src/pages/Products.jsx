@@ -34,7 +34,7 @@ useEffect(() => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product._id} product={product} />
           ))}
         </div>
       </div>

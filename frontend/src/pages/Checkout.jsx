@@ -1,69 +1,67 @@
-import { useCart } from "../context/CartContext";
-import { useOrders } from "../context/OrderContext";
+import { useState } from "react";
+import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
-  const { cartItems } = useCart();
-  const { placeOrder } = useOrders();
   const navigate = useNavigate();
 
-  const totalPrice = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const [shippingAddress, setShippingAddress] = useState({
+    fullName: "",
+    phone: "",
+    address: "",
+    city: "",
+    postalCode: "",
+  });
 
-  const handleCheckout = () => {
-    if (cartItems.length === 0) return;
+  const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [loading, setLoading] = useState(false);
 
-    placeOrder(cartItems);
-    localStorage.removeItem("cart");
-    navigate("/orders");
+  const handleChange = (e) => {
+    setShippingAddress({
+      ...shippingAddress,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+      try {
+    setLoading(true);  
+    await API.post("/orders", {
+      shippingAddress,
+      paymentMethod,
+    });
+    navigate("/order-success");
+  } catch (error) {
+    alert(error.response?.data?.message || "Order failed");
+  } finally {
+    setLoading(false);  
+  }
   };
 
   return (
-    <div className="min-h-screen py-24 px-6 bg-light">
-      <div className="max-w-5xl mx-auto">
+    <div className="max-w-lg mx-auto mt-10">
+      <h2 className="text-2xl font-bold mb-6">Checkout</h2>
 
-        <h1 className="text-4xl font-bold text-primary mb-10">
-          Checkout
-        </h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input name="fullName" placeholder="Full Name" onChange={handleChange} required className="input" />
+        <input name="phone" placeholder="Phone" onChange={handleChange} required className="input" />
+        <input name="address" placeholder="Address" onChange={handleChange} required className="input" />
+        <input name="city" placeholder="City" onChange={handleChange} required className="input" />
+        <input name="postalCode" placeholder="Postal Code" onChange={handleChange} required className="input" />
 
-        <div className="bg-white p-8 rounded-2xl shadow space-y-6">
+        <select onChange={(e) => setPaymentMethod(e.target.value)} className="input">
+          <option value="COD">Cash on Delivery</option>
+          <option value="UPI">UPI</option>
+        </select>
 
-          {cartItems.map((item) => (
-            <div key={item.id} className="flex justify-between">
-              <div>
-                <h2 className="font-semibold">
-                  {item.name}
-                </h2>
-                <p className="text-gray-600 text-sm">
-                  ₹{item.price} × {item.quantity}
-                </p>
-              </div>
-
-              <div className="font-semibold">
-                ₹{item.price * item.quantity}
-              </div>
-            </div>
-          ))}
-
-          <hr />
-
-          <div className="flex justify-between text-xl font-bold">
-            <span>Total:</span>
-            <span>₹{totalPrice}</span>
-          </div>
-
-          <button
-            onClick={handleCheckout}
-            className="w-full mt-6 bg-primary text-white py-4 rounded-xl"
-          >
-            Confirm Order
-          </button>
-
-        </div>
-
-      </div>
+        <button
+          disabled={loading}
+          className="bg-green-600 text-white px-4 py-3 rounded w-full"
+        >
+          {loading ? "Placing Order..." : "Place Order"}
+        </button>
+      </form>
     </div>
   );
 };

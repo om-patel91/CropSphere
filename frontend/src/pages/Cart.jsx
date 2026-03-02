@@ -1,88 +1,115 @@
 import { useCart } from "../context/CartContext";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cartItems, updateQuantity } = useCart();
+  const { cartItems, updateQuantity, removeFromCart } = useCart();
+  const navigate = useNavigate();
 
   const totalPrice = cartItems.reduce(
-  (total, item) => total + Number(item.price) * item.quantity,
-  0
-);
+    (total, item) => total + item.product.price * item.quantity,
+    0
+  );
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <h2 className="text-3xl font-bold mb-4">Your Cart is Empty 🛒</h2>
+        <button
+          onClick={() => navigate("/products")}
+          className="bg-green-600 text-white px-6 py-3 rounded-xl"
+        >
+          Continue Shopping
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen py-24 px-6 bg-light">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-16">
+      <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-10">
 
-        <h1 className="text-4xl font-bold text-primary mb-10">
-          Your Cart
-        </h1>
-
-        {cartItems.length === 0 ? (
-          <div className="bg-white p-10 rounded-2xl shadow text-center">
-            <p className="text-gray-600 text-lg">
-              Your cart is empty.
-            </p>
-            <Link
-              to="/products"
-              className="inline-block mt-6 bg-primary text-white px-6 py-3 rounded-xl"
+        {/* Cart Items */}
+        <div className="md:col-span-2 space-y-6">
+          {cartItems.map((item) => (
+            <div
+              key={item._id}
+              className="flex items-center justify-between bg-white p-6 rounded-xl shadow"
             >
-              Browse Products
-            </Link>
-          </div>
-        ) : (
-          <>
-            <div className="space-y-6">
-              {cartItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="p-6 bg-white shadow rounded-2xl flex justify-between items-center"
-                >
-                  <div>
-                    <h2 className="text-lg font-semibold">
-                      {item.name}
-                    </h2>
-                    <p className="text-gray-600">
-                      ₹{item.price} × {item.quantity}
-                    </p>
-                  </div>
+              <div className="flex items-center gap-6">
+                <img
+                  src={item.product.image}
+                  alt={item.product.name}
+                  className="w-24 h-24 object-contain"
+                />
 
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                      className="px-3 py-1 bg-gray-200 rounded"
-                    >
-                      -
-                    </button>
+                <div>
+                  <h3 className="text-lg font-semibold">
+                    {item.product.name}
+                  </h3>
+                  <p className="text-gray-600">
+                    ₹{item.product.price}
+                  </p>
 
-                    <span className="font-semibold">
-                      {item.quantity}
-                    </span>
-
-                    <button
-                      onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                      className="px-3 py-1 bg-gray-200 rounded"
-                    >
-                      +
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => removeFromCart(item._id)}
+                    className="text-red-500 text-sm mt-2"
+                  >
+                    Remove
+                  </button>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className="mt-12 bg-white p-8 rounded-2xl shadow flex justify-between items-center">
-              <h2 className="text-2xl font-bold">
-                Total: ₹{totalPrice}
-              </h2>
+              {/* Quantity Controls */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() =>
+                    updateQuantity(item._id, item.quantity - 1)
+                  }
+                  className="px-3 py-1 bg-gray-200 rounded"
+                >
+                  -
+                </button>
 
-              <Link
-                to="/checkout"
-                className="bg-primary text-white px-8 py-4 rounded-xl"
-              >
-                Proceed to Checkout
-              </Link>
+                <span className="font-semibold">
+                  {item.quantity}
+                </span>
+
+                <button
+                  onClick={() =>
+                    updateQuantity(item._id, item.quantity + 1)
+                  }
+                  className="px-3 py-1 bg-gray-200 rounded"
+                >
+                  +
+                </button>
+              </div>
             </div>
-          </>
-        )}
+          ))}
+        </div>
+
+        {/* Order Summary */}
+        <div className="bg-white p-8 rounded-xl shadow h-fit">
+          <h2 className="text-xl font-bold mb-6">
+            Order Summary
+          </h2>
+
+          <div className="flex justify-between mb-4">
+            <span>Total Items</span>
+            <span>{cartItems.length}</span>
+          </div>
+
+          <div className="flex justify-between mb-6 text-lg font-semibold">
+            <span>Total Price</span>
+            <span>₹{totalPrice}</span>
+          </div>
+
+          <button
+            onClick={() => navigate("/checkout")}
+            className="w-full bg-green-600 text-white py-3 rounded-xl"
+          >
+            Proceed to Checkout
+          </button>
+        </div>
 
       </div>
     </div>

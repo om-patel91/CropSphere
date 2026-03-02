@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import API from "../api/axios";
+import API from "../api/axios.js";
 
 const CartContext = createContext();
 
@@ -19,14 +19,13 @@ export const CartProvider = ({ children }) => {
   // ➕ Add to Cart
   const addToCart = async (product) => {
     try {
-      const { data } = await API.post("/cart", {
-        productId: product._id,
-        name: product.name,
-        price: product.price,
+      console.log(product);
+      await API.post("/cart", {
+          productId: product._id ,
         quantity: 1,
       });
 
-      setCartItems(data.items);
+    await fetchCart();
     } catch (error) {
       console.log("Add to cart error:", error.response?.data);
     }
