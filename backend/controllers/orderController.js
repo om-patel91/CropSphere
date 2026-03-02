@@ -5,6 +5,8 @@ import Cart from "../models/cart.js";
 
 export const createOrder = async (req, res) => {
   try {
+    const { shippingAddress, paymentMethod } = req.body;
+
     const cart = await Cart.findOne({ user: req.user._id })
       .populate("items.product");
 
@@ -13,7 +15,7 @@ export const createOrder = async (req, res) => {
     }
 
     const orderItems = cart.items.map((item) => ({
-      product: item.product._id,   // NOW SAFE
+      product: item.product._id,
       name: item.product.name,
       price: item.product.price,
       image: item.product.image,
@@ -28,13 +30,14 @@ export const createOrder = async (req, res) => {
     const order = await Order.create({
       user: req.user._id,
       orderItems,
+      shippingAddress,
+      paymentMethod,
       totalAmount,
     });
 
-    // Clear cart after order
     cart.items = [];
     await cart.save();
-    console.log(cart.items);
+
     res.status(201).json(order);
 
   } catch (error) {

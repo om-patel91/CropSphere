@@ -4,8 +4,11 @@ import Product from "../models/product.js"
 // @desc    Get user cart
 // @route   GET /api/cart
 export const getCart = async (req, res) => {
-  const cart = await Cart.findOne({ user: req.user._id });
-
+  const cart = await Cart.findOne({ user: req.user._id })
+    .populate({
+      path: "items.product",
+    });
+  console.log("POPULATED CART:", cart);
   if (!cart) {
     return res.json({ items: [] });
   }
