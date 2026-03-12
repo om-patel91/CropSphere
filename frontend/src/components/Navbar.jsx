@@ -65,7 +65,11 @@ const Navbar = () => {
                         >
                             Login
                         </Link>
-                    )}
+                        
+                    
+                    )
+                }
+                <Link to="/weather">Weather</Link>
                 </div>
             </div>
         </nav>
