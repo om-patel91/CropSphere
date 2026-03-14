@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import API from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 const Weather = () => {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Auto detect location
   useEffect(() => {
@@ -115,7 +117,15 @@ const Weather = () => {
                 ))}
               </div>
             )}
+            <button
+  onClick={() => navigate("/weather-analytics")}
+  className="mt-6 bg-primary text-white px-6 py-3 rounded-xl"
+>
+  View Trends
+</button>
+            
           </div>
+
         )}
       </div>
     </div>

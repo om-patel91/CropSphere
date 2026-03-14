@@ -13,6 +13,7 @@ import Checkout from "./pages/Checkout.jsx";
 import Orders from "./pages/Orders.jsx";
 import OrderSuccess from "./pages/OrderSuccess.jsx";
 import Weather from "./pages/Weather.jsx";
+import WeatherAnalytics from "./pages/WeatherAnalysis.jsx";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
 <Route path="/orders" element={<Orders/>}/>
 <Route path="/order-success" element={<OrderSuccess/>}/>
 <Route path="/weather" element={<Weather/>}/>
+<Route path="/weather-analytics" element={<WeatherAnalytics />} />
     </Routes>
     
   );

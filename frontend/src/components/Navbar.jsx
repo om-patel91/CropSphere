@@ -70,6 +70,7 @@ const Navbar = () => {
                     )
                 }
                 <Link to="/weather">Weather</Link>
+                <Link to="/weather-analytics">Analytics</Link>
                 </div>
             </div>
         </nav>
