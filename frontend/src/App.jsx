@@ -14,6 +14,9 @@ import Orders from "./pages/Orders.jsx";
 import OrderSuccess from "./pages/OrderSuccess.jsx";
 import Weather from "./pages/Weather.jsx";
 import WeatherAnalytics from "./pages/WeatherAnalysis.jsx";
+import Equipments from "./pages/Equipments";
+import RentEquipment from "./pages/RentEquipment";
+import AdminRentals from "./pages/AdminRentals.jsx";
 
 function App() {
   return (
@@ -49,6 +52,9 @@ function App() {
 <Route path="/order-success" element={<OrderSuccess/>}/>
 <Route path="/weather" element={<Weather/>}/>
 <Route path="/weather-analytics" element={<WeatherAnalytics />} />
+<Route path="/equipments" element={<Equipments />} />
+<Route path="/rent/:id" element={<RentEquipment />} />
+<Route path="/admin/rentals" element={<AdminRentals/>}/>
     </Routes>
     
   );

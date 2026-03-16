@@ -42,7 +42,9 @@ const Navbar = () => {
                             {cartItems.length}
                         </span>
                     </Link>
-
+                      <Link to="/weather">Weather</Link>
+                      <Link to="/equipments">Rent Equipment</Link>
+                      <Link to="/admin/rentals">Manage Rentals</Link>
                     {user ? (
                         <div className="flex items-center gap-4">
                             {user.role === "admin" && (
@@ -69,8 +71,7 @@ const Navbar = () => {
                     
                     )
                 }
-                <Link to="/weather">Weather</Link>
-                <Link to="/weather-analytics">Analytics</Link>
+              
                 </div>
             </div>
         </nav>

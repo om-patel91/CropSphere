@@ -9,6 +9,8 @@ import cartRoutes from "./routes/cartRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js"
 import weatherRoutes from "./routes/weatherRoutes.js"
 import "./jobs/weatherCron.js";
+import rentalRoutes from "./routes/rentalRoutes.js";
+import equipmentRoutes from "./routes/equipmentRoutes.js";
 
 dotenv.config();
 
@@ -30,6 +32,8 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes)
 app.use("/api/weather",weatherRoutes)
+app.use("/api/rentals", rentalRoutes);
+app.use("/api/equipments",equipmentRoutes);
 
 //Test Route
 app.get("/",(req,res) => {
