@@ -1,82 +1,95 @@
-import { Link } from "react-router-dom";
-import { ShoppingCart, User } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
-import { useCart } from "../context/CartContext";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-    const { user, logout } = useAuth();
-    const { cartItems } = useCart();
-    return (
-        <nav className="bg-white shadow-md sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-                {/* Logo */}
-                <Link to="/" className="text-2xl font-bold text-primary">
-                    🌾 CropSphere
-                </Link>
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("userInfo"));
 
-                {/* Search Bar */}
-                <div className="hidden md:flex flex-1 mx-10">
-                    <input
-                        type="text"
-                        placeholder="Search seeds, fertilizers..."
-                        className="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-secondary"
-                    />
-                </div>
+  const handleLogout = () => {
+    localStorage.removeItem("userInfo");
+    navigate("/login");
+  };
 
-                {/* Nav Links */}
-                <div className="flex items-center gap-6 text-gray-700 font-medium">
-                    <Link to="/products" className="hover:text-secondary transition">
-                        Shop
-                    </Link>
-                    <Link to="/rentals" className="hover:text-secondary transition">
-                        Rentals
-                    </Link>
-                    <Link to="/education" className="hover:text-secondary transition">
-                        Education
-                    </Link>
+  return (
+    <nav className="bg-white shadow-md px-8 py-4 flex justify-between items-center">
 
-                    <Link to="/cart" className="relative">
-                        <ShoppingCart size={22} />
-                        <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs px-2 rounded-full">
-                            {cartItems.length}
-                        </span>
-                    </Link>
-                      <Link to="/weather">Weather</Link>
-                      <Link to="/equipments">Rent Equipment</Link>
-                      <Link to="/admin/rentals">Manage Rentals</Link>
-                      <Link to="/my-rentals">My Rentals</Link>
-                    {user ? (
-                        <div className="flex items-center gap-4">
-                            {user.role === "admin" && (
-                                <Link to="/admin" className="hover:text-secondary">
-                                    Admin
-                                </Link>
-                            )}
+      {/* Logo */}
+      <Link to="/" className="text-2xl font-bold text-primary">
+        🌾 CropSphere
+      </Link>
 
-                            <button
-                                onClick={logout}
-                                className="bg-primary text-white px-4 py-2 rounded-full hover:bg-secondary transition"
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    ) : (
-                        <Link
-                            to="/login"
-                            className="bg-primary text-white px-4 py-2 rounded-full hover:bg-secondary transition"
-                        >
-                            Login
-                        </Link>
-                        
-                    
-                    )
-                }
-              
-                </div>
-            </div>
-        </nav>
-    );
+      <div className="flex items-center gap-6">
+
+        {/* NOT LOGGED IN */}
+        {!user && (
+          <>
+            <Link className="hover:text-primary" to="/login">
+              Login
+            </Link>
+            <Link className="hover:text-primary" to="/register">
+              Register
+            </Link>
+          </>
+        )}
+
+        {/* FARMER */}
+        {user && user.role !== "admin" && (
+          <>
+            <Link className="hover:text-primary" to="/dashboard">
+              Dashboard
+            </Link>
+
+            <Link className="hover:text-primary" to="/products">
+              Products
+            </Link>
+
+            <Link className="hover:text-primary" to="/cart">
+              Cart
+            </Link>
+
+            <Link className="hover:text-primary" to="/weather">
+              Weather
+            </Link>
+
+            <Link className="hover:text-primary" to="/my-rentals">
+              My Rentals
+            </Link>
+          </>
+        )}
+
+        {/* ADMIN */}
+        {user && user.role === "admin" && (
+          <>
+            <Link
+              className="bg-primary text-white px-4 py-2 rounded-lg"
+              to="/admin"
+            >
+              Admin Panel
+            </Link>
+          </>
+        )}
+
+        {/* USER NAME */}
+        {user && (
+          <span className="text-gray-600 text-sm">
+            Hi, {user.name}
+          </span>
+        )}
+
+        {/* LOGOUT */}
+        {user && (
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+          >
+            Logout
+          </button>
+        )}
+
+      </div>
+
+    </nav>
+  );
 };
 
 export default Navbar;

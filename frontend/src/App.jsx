@@ -5,7 +5,6 @@ import Login from "./pages/Login.jsx"
 import Register from "./pages/Register.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./pages/Cart";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
 import Products from "./pages/Products.jsx";
 import ProductDetails from "./pages/ProductDetail.jsx";
@@ -18,6 +17,8 @@ import Equipments from "./pages/Equipments";
 import RentEquipment from "./pages/RentEquipment";
 import AdminRentals from "./pages/AdminRentals.jsx";
 import MyRentals from "./pages/MyRentals.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 
 function App() {
   return (
@@ -57,6 +58,8 @@ function App() {
 <Route path="/rent/:id" element={<RentEquipment />} />
 <Route path="/admin/rentals" element={<AdminRentals/>}/>
 <Route path="my-rentals" element={<MyRentals/>}/>
+<Route path="/dashboard" element={<Dashboard />} />
+<Route path="/admin" element={<AdminDashboard />} />
     </Routes>
     
   );

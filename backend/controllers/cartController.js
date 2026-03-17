@@ -8,7 +8,7 @@ export const getCart = async (req, res) => {
     .populate({
       path: "items.product",
     });
-  console.log("POPULATED CART:", cart);
+  
   if (!cart) {
     return res.json({ items: [] });
   }
