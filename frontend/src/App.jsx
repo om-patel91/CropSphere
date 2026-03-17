@@ -17,6 +17,7 @@ import WeatherAnalytics from "./pages/WeatherAnalysis.jsx";
 import Equipments from "./pages/Equipments";
 import RentEquipment from "./pages/RentEquipment";
 import AdminRentals from "./pages/AdminRentals.jsx";
+import MyRentals from "./pages/MyRentals.jsx";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
 <Route path="/equipments" element={<Equipments />} />
 <Route path="/rent/:id" element={<RentEquipment />} />
 <Route path="/admin/rentals" element={<AdminRentals/>}/>
+<Route path="my-rentals" element={<MyRentals/>}/>
     </Routes>
     
   );

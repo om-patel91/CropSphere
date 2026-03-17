@@ -45,6 +45,7 @@ const Navbar = () => {
                       <Link to="/weather">Weather</Link>
                       <Link to="/equipments">Rent Equipment</Link>
                       <Link to="/admin/rentals">Manage Rentals</Link>
+                      <Link to="/my-rentals">My Rentals</Link>
                     {user ? (
                         <div className="flex items-center gap-4">
                             {user.role === "admin" && (

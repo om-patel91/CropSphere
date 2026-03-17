@@ -14,14 +14,28 @@ const AdminRentals = () => {
     fetchRentals();
   }, []);
 
-  const updateStatus = async (id, status) => {
+const updateStatus = async (id, status) => {
+  try {
 
-  console.log("Updating rental:", id, status);
+    console.log("Updating rental:", id, status);
 
-  await API.put(`/rentals/${id}/status`, { status });
+    const { data } = await API.put(
+      `/rentals/${id}/status`,
+      JSON.stringify({ status }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-  fetchRentals();
+    console.log("Updated:", data);
 
+    fetchRentals();
+
+  } catch (error) {
+    console.log("Error:", error.response?.data);
+  }
 };
 
   return (
