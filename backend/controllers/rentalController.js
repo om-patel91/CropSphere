@@ -30,10 +30,17 @@ export const createRental = async (req, res) => {
 };
 
 export const getMyRentals = async (req, res) => {
-  const rentals = await RentalBooking.find({ user: req.user._id })
-    .populate("equipment");
+  try {
 
-  res.json(rentals);
+    const rentals = await RentalBooking.find({
+      user: req.user._id,
+    }).populate("equipment", "name image pricePerDay");
+
+    res.json(rentals);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // Get all rentals (admin)
@@ -56,7 +63,11 @@ export const getAllRentals = async (req, res) => {
 export const updateRentalStatus = async (req, res) => {
   try {
 
-    const { status } = req.body;
+    const status = req.body?.status;
+
+    if (!status) {
+      return res.status(400).json({ message: "Status is required" });
+    }
 
     const rental = await RentalBooking.findById(req.params.id);
 
