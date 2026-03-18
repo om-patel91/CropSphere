@@ -34,6 +34,15 @@ const Register = () => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-[#1b4332]/65"></div>
+         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white/90">
+            Join CropSphere 🌾
+          </h2>
+
+          <p className="text-sm md:text-base text-white/80 mt-3 max-w-md">
+            Start your smart farming journey today.
+          </p>
+        </div>
       </div>
 
       {/* RIGHT FORM */}
